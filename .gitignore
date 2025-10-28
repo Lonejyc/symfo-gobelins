@@ -1,0 +1,69 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+
+###> Fichiers et dossiers Symfony ###
+
+# Fichiers de configuration PHP-FPM locaux
+/etc/local.d/
+
+# Fichiers de cache, logs, et sessions
+/var/*
+!/var/cache
+/var/cache/*
+!/var/cache/.gitkeep
+!/var/log
+/var/log/*
+!/var/log/.gitkeep
+!/var/sessions
+/var/sessions/*
+!/var/sessions/.gitkeep
+
+# Fichiers de build (Webpack Encore / Vite)
+/public/build/
+
+# Fichiers PHPUnit
+/phpunit.xml.dist
+/phpunit.result.cache
+/coverage.xml
+
+# Fichier de base de données SQLite local
+*.db
+*.db.wal
+
+# Fichiers de dump de base de données
+*.sql
+
+###< Fichiers et dossiers Symfony ###
+
+###> Fichiers système et IDE ###
+
+# Fichiers système (macOS, Linux, Windows)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers d'IDE (PHPStorm, VSCode, etc.)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Fichiers PHPStorm
+.php-cs-fixer.cache
+.phpstorm.meta.php
+.phpunit.result.cache
+/build/
+
+# Fichiers locaux Docker (ne pas versionner les overrides)
+docker-compose.override.yml
+
+###< Fichiers système et IDE ###
