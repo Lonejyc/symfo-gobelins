@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Symfo Gobelins",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,25 @@
+meta {
+  name: User Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://symfo-gobelins.test/api/user
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/ld+json
+}
+
+body:json {
+  {
+    "email": "jocelyn.marcilloux@gmail.com",
+    "password": "azertyuiop",
+    "balance": 10,
+    "pseudo": "Lonejyc",
+    "tier": "Diamant"
+  }
+}
