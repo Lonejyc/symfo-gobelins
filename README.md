@@ -3,12 +3,12 @@
 ## 📝 Brief du Projet
 
 L'objectif est de faire un site de gambling Counter Strike un peu comme "Hellcase". Il faut qu'il y ai: 
-- une liste de caisses disponibles
-- le contenu de chaque caisse
-- le profil de l'utilisateur connecté son solde et son inventaire
-- son historique d'ouverture
-- la possibilité d'ouvrir une caisse
-- une gestion des abonnements
+- [ ] une liste de caisses disponibles
+- [ ] le contenu de chaque caisse
+- [ ] le profil de l'utilisateur connecté son solde et son inventaire
+- [ ] son historique d'ouverture
+- [ ] la possibilité d'ouvrir une caisse
+- [ ] une gestion des abonnements
 
 ---
 
@@ -35,9 +35,9 @@ Voici les grandes étapes.s
 
 ### ✅ Phase 1 : MVP
 * **Auth :** Inscription / Connexion JWT.
-* **Entités :** `User`, `Case`, `Item`, `InventoryItem`.
+* **Entités :** `User`, `Kase`, `Item`, `InventoryItem`, `KaseItem`.
 * **API :** CRUD pour les Caisses/Items (lecture seule).
-* **Logique :** Opération `POST /api/cases/{id}/open` fonctionnelle (solde fictif, algo de "roll" V1).
+* **Logique :** Opération `POST /api/kase/{id}/open` fonctionnelle (solde fictif).
 * **Front :** Pages de base (login, liste des caisses, inventaire). **(Optionnel)**
 
 ### 🚀 Phase 2 : Securité
@@ -51,7 +51,7 @@ Voici les grandes étapes.s
     * Mise en place des **crons** de stats et de cleanup BDD.
 
 ### 🌌 Phase 4 : Partie Bonus
-* **Vente d'Items :** Opération `POST /api/inventory/{id}/sell` (revente contre solde).
+* **Vente d'Items :** Opération `POST /api/inventory_item/{id}/sell` (revente contre solde).
 * **Trade-up :** Opération `POST /api/trade-up` (échanger 10 items contre 1 de rareté supérieure).
 * **Case Battles :** Développement du mode de jeu Joueur vs Joueur.
 
