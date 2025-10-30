@@ -1,0 +1,27 @@
+meta {
+  name: Assign Item to Kase
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://symfo-gobelins.test/api/case_item
+  body: json
+  auth: bearer
+}
+
+headers {
+  content-type: application/ld+json
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NjE4NDQ4MTIsImV4cCI6MTc2MTg0ODQxMiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImpvY2VseW4ubWFyY2lsbG91eEBnbWFpbC5jb20ifQ.rm2FTvsF4LwdGInQ65h-2M8Hjyf0ewc6xrjgvmVtDHVE3vp4x_VFM9FkFO4jGlMWptTEiqxfcSQEd-So8ajI_uOeMLldV7Vzk_Yw8ZgN8uVpic5bzheVKJn0Xm-Cl2CgG90r-TJAkR6ixLif6kk6A_h_LjOiD3ouKXP7enwcQTtD-vhLlLIv9v-Q8KiPOZf4bkIUXB--v9JjOvnrQ5j5AM4X9mxsJ_ZihCuJNITm3XDUDTOeg-REVWvyCWXTbP3lY7M-wgKfPbxvkqJcuurQ-XoSSeCQ-RNPby8uuvCQnJMgetFbifsD5fvkaET6Fjymye5YYTGlInnFgX2IbLX7Vw
+}
+
+body:json {
+  {
+    "case": "/api/case/1",
+    "item": "/api/item/4",
+    "dropRate": 0.12
+  }
+}

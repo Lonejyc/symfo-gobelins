@@ -1,0 +1,19 @@
+meta {
+  name: Get Kase
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://symfo-gobelins.test/api/case/1
+  body: none
+  auth: bearer
+}
+
+headers {
+  content-type: application/ld+json
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NjE4NTA0NDMsImV4cCI6MTc2MTg1NDA0Mywicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImpvY2VseW4ubWFyY2lsbG91eEBnbWFpbC5jb20ifQ.fqdR7PnSrYI7DTzktVaSEVk0Osx7ZWFAwxGjcWwXuI2RLVADnr0tQfvlVqWKZpJJGgRtxMepdozcGQrTkZfkDR_8oGHv6NZhW6ybz6dtI-eCpGInrtxLXojecta7Nozf-4fSTQ_WJUoz1NoA3NFBcbkp0Dw3bhqJipdlf_MvUfMsq6OzfiXF10TdUtOEfWs12D9J3VjRnUd7hsaYQD_tBoI96uFlEDeLQlHM8HPkYM1gWpAFheqQe6rc9zsuSp2yBGo3mioKagq2H4FAgPM2xb6fMlvLSeFNBbi2TOvDE0L-lVd-75yvhQLjcBI2CVmHURHoWxxd93c5JGlHCnRihQ
+}
