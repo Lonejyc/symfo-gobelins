@@ -14,31 +14,41 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: KaseRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            normalizationContext: ['groups' => ['case:read']]
+        ),
         new Get(
-            uriTemplate: '/kase/{id}',
+            uriTemplate: '/case/{id}',
             uriVariables: ['id' => 'id'],
+            normalizationContext: ['groups' => ['case:read']],
         ),
         new Post(
-            uriTemplate: '/kase',
-            denormalizationContext: ['groups' => ['kase:create']],
+            uriTemplate: '/case',
+            normalizationContext: ['groups' => ['case:read']],
+            denormalizationContext: ['groups' => ['case:write']],
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Patch(
-            uriTemplate: '/kase/{id}',
+            uriTemplate: '/case/{id}',
             uriVariables: ['id' => 'id'],
-            denormalizationContext: ['groups' => ['kase:create']],
+            normalizationContext: ['groups' => ['case:read']],
+            denormalizationContext: ['groups' => ['case:write']],
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Delete(
-            uriTemplate: '/kase/{id}',
+            uriTemplate: '/case/{id}',
             uriVariables: ['id' => 'id'],
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Post(
-            uriTemplate: '/kase/{id}/open',
+            uriTemplate: '/case/{id}/open',
             uriVariables: ['id' => 'id'],
+            security: "is_granted('ROLE_USER')"
             // custom processor
         ),
     ],
@@ -48,34 +58,37 @@ class Kase
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('case:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('kase:create')]
+    #[Groups(['case:write', 'case:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups('kase:create')]
+    #[Assert\NotBlank(groups: ['case:write'])]
+    #[Assert\PositiveOrZero(groups: ['case:write'])]
+    #[Groups(['case:write', 'case:read'])]
     private ?float $price = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups('kase:create')]
+    #[Groups(['case:write', 'case:read'])]
     private ?string $imageUrl = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('kase:create')]
+    #[Groups(['case:write', 'case:read'])]
     private ?UserTier $requiredTier = UserTier::BASIC;
 
     /**
      * @var Collection<int, KaseItem>
      */
-    #[ORM\OneToMany(targetEntity: KaseItem::class, mappedBy: 'kase')]
-    #[Groups('kase:create')]
-    private Collection $kaseItems;
+    #[ORM\OneToMany(targetEntity: KaseItem::class, mappedBy: 'case')]
+    #[Groups('case:read')]
+    private Collection $caseItems;
 
     public function __construct()
     {
-        $this->kaseItems = new ArrayCollection();
+        $this->caseItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,27 +147,27 @@ class Kase
     /**
      * @return Collection<int, KaseItem>
      */
-    public function getItem(): Collection
+    public function getCaseItems(): Collection
     {
-        return $this->kaseItems;
+        return $this->caseItems;
     }
 
-    public function addItem(KaseItem $item): static
+    public function addCaseItem(KaseItem $caseItem): static
     {
-        if (!$this->kaseItems->contains($item)) {
-            $this->kaseItems->add($item);
-            $item->setKase($this);
+        if (!$this->caseItems->contains($caseItem)) {
+            $this->caseItems->add($caseItem);
+            $caseItem->setCase($this);
         }
 
         return $this;
     }
 
-    public function removeItem(KaseItem $item): static
+    public function removeCaseItem(KaseItem $caseItem): static
     {
-        if ($this->kaseItems->removeElement($item)) {
+        if ($this->caseItems->removeElement($caseItem)) {
             // set the owning side to null (unless already changed)
-            if ($item->getKase() === $this) {
-                $item->setKase(null);
+            if ($caseItem->getCase() === $this) {
+                $caseItem->setCase(null);
             }
         }
 

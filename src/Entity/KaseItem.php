@@ -10,27 +10,36 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\KaseItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: KaseItemRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(
             uriTemplate: '/case_items',
+            normalizationContext: ['groups' => ['case_item:read']]
         ),
         new Get(
             uriTemplate: '/case_item/{id}',
             uriVariables: ['id' => 'id'],
+            normalizationContext: ['groups' => ['case_item:read']]
         ),
         new Post(
             uriTemplate: '/case_item',
+            denormalizationContext: ['groups' => ['case_item:write']],
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Patch(
             uriTemplate: '/case_item/{id}',
             uriVariables: ['id' => 'id'],
+            denormalizationContext: ['groups' => ['case_item:write']],
+            security: "is_granted('ROLE_ADMIN')"
         ),
         new Delete(
             uriTemplate: '/case_item/{id}',
             uriVariables: ['id' => 'id'],
+            security: "is_granted('ROLE_ADMIN')"
         ),
     ],
 )]
@@ -39,17 +48,24 @@ class KaseItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['case_item:read', 'case:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(groups: ['case_item:write'])]
+    #[Groups(['case_item:read', 'case_item:write', 'case:read'])]
     private ?float $dropRate = null;
 
-    #[ORM\ManyToOne(inversedBy: 'kaseItems')]
+    #[ORM\ManyToOne(inversedBy: 'caseItems')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Kase $kase = null;
+    #[Assert\NotBlank(groups: ['case_item:write'])]
+    #[Groups(['case_item:read', 'case_item:write'])]
+    private ?Kase $case = null;
 
-    #[ORM\ManyToOne(inversedBy: 'kaseItems')]
+    #[ORM\ManyToOne(inversedBy: 'caseItems')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(groups: ['case_item:write'])]
+    #[Groups(['case_item:read', 'case_item:write', 'case:read'])]
     private ?Item $item = null;
 
     public function getId(): ?int
@@ -69,14 +85,14 @@ class KaseItem
         return $this;
     }
 
-    public function getKase(): ?Kase
+    public function getCase(): ?Kase
     {
-        return $this->kase;
+        return $this->case;
     }
 
-    public function setKase(?Kase $kase): static
+    public function setCase(?Kase $case): static
     {
-        $this->kase = $kase;
+        $this->case = $case;
 
         return $this;
     }

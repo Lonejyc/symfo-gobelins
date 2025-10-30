@@ -12,25 +12,35 @@ use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(
+            normalizationContext: ['groups' => ['item:read']]
+        ),
         new Get(
             uriTemplate: '/item/{id}',
             uriVariables: ['id' => 'id'],
+            normalizationContext: ['groups' => ['item:read']],
         ),
         new Post(
             uriTemplate: '/item',
+            denormalizationContext: ['groups' => ['item:write']],
+            security: "is_granted('ROLE_ADMIN')",
         ),
         new Patch(
             uriTemplate: '/item/{id}',
             uriVariables: ['id' => 'id'],
+            denormalizationContext: ['groups' => ['item:update']],
+            security: "is_granted('ROLE_ADMIN')",
         ),
         new Delete(
             uriTemplate: '/item/{id}',
             uriVariables: ['id' => 'id'],
+            security: "is_granted('ROLE_ADMIN')",
         ),
     ],
 )]
@@ -39,25 +49,34 @@ class Item
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['item:read', 'case:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(groups: ['item:write'])]
+    #[Groups(['item:read', 'item:write', 'item:update', 'case:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(groups: ['item:write'])]
+    #[Groups(['item:read', 'item:write', 'case:read'])]
     private ?string $rarity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['item:read', 'item:write', 'item:update', 'case:read'])]
     private ?string $imageUrl = null;
 
     #[ORM\Column]
-    private ?float $marketPrice = null;
+    #[Assert\NotBlank(groups: ['item:write'])]
+    #[Assert\PositiveOrZero(groups: ['item:write', 'item:update'])]
+    #[Groups(['item:read', 'item:write', 'item:update', 'case:read'])]
+    private ?float $basePrice = null;
 
     /**
      * @var Collection<int, KaseItem>
      */
     #[ORM\OneToMany(targetEntity: KaseItem::class, mappedBy: 'item')]
-    private Collection $kaseItems;
+    private Collection $caseItems;
 
     /**
      * @var Collection<int, InventoryItem>
@@ -67,7 +86,7 @@ class Item
 
     public function __construct()
     {
-        $this->kaseItems = new ArrayCollection();
+        $this->caseItems = new ArrayCollection();
         $this->inventoryItems = new ArrayCollection();
     }
 
@@ -112,14 +131,14 @@ class Item
         return $this;
     }
 
-    public function getMarketPrice(): ?float
+    public function getBasePrice(): ?float
     {
-        return $this->marketPrice;
+        return $this->basePrice;
     }
 
-    public function setMarketPrice(float $marketPrice): static
+    public function setBasePrice(float $basePrice): static
     {
-        $this->marketPrice = $marketPrice;
+        $this->basePrice = $basePrice;
 
         return $this;
     }
@@ -127,27 +146,27 @@ class Item
     /**
      * @return Collection<int, KaseItem>
      */
-    public function getKaseItems(): Collection
+    public function getCaseItems(): Collection
     {
-        return $this->kaseItems;
+        return $this->caseItems;
     }
 
-    public function addKaseItem(KaseItem $kaseItem): static
+    public function addCaseItem(KaseItem $caseItem): static
     {
-        if (!$this->kaseItems->contains($kaseItem)) {
-            $this->kaseItems->add($kaseItem);
-            $kaseItem->setItem($this);
+        if (!$this->caseItems->contains($caseItem)) {
+            $this->caseItems->add($caseItem);
+            $caseItem->setItem($this);
         }
 
         return $this;
     }
 
-    public function removeKaseItem(KaseItem $kaseItem): static
+    public function removeCaseItem(KaseItem $caseItem): static
     {
-        if ($this->kaseItems->removeElement($kaseItem)) {
+        if ($this->caseItems->removeElement($caseItem)) {
             // set the owning side to null (unless already changed)
-            if ($kaseItem->getItem() === $this) {
-                $kaseItem->setItem(null);
+            if ($caseItem->getItem() === $this) {
+                $caseItem->setItem(null);
             }
         }
 
