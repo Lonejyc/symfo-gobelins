@@ -8,10 +8,12 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Enum\UserTier;
 use App\Repository\KaseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: KaseRepository::class)]
 #[ApiResource(
@@ -23,10 +25,12 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Post(
             uriTemplate: '/kase',
+            denormalizationContext: ['groups' => ['kase:create']],
         ),
         new Patch(
             uriTemplate: '/kase/{id}',
             uriVariables: ['id' => 'id'],
+            denormalizationContext: ['groups' => ['kase:create']],
         ),
         new Delete(
             uriTemplate: '/kase/{id}',
@@ -47,21 +51,26 @@ class Kase
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('kase:create')]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups('kase:create')]
     private ?float $price = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('kase:create')]
     private ?string $imageUrl = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $requiredTier = null;
+    #[ORM\Column(length: 255)]
+    #[Groups('kase:create')]
+    private ?UserTier $requiredTier = UserTier::BASIC;
 
     /**
      * @var Collection<int, KaseItem>
      */
     #[ORM\OneToMany(targetEntity: KaseItem::class, mappedBy: 'kase')]
+    #[Groups('kase:create')]
     private Collection $kaseItems;
 
     public function __construct()
@@ -110,12 +119,12 @@ class Kase
         return $this;
     }
 
-    public function getRequiredTier(): ?string
+    public function getRequiredTier(): ?UserTier
     {
         return $this->requiredTier;
     }
 
-    public function setRequiredTier(?string $requiredTier): static
+    public function setRequiredTier(?UserTier $requiredTier): static
     {
         $this->requiredTier = $requiredTier;
 

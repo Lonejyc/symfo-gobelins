@@ -2,17 +2,62 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\Enum\UserTier;
+use App\State\UserProcessor;
+use App\Controller\UserController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity('email')]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/users',
+            normalizationContext: ['groups' => ['user:read']],
+        ),
+        new Get(
+            uriTemplate: '/user/{id}',
+            uriVariables: ['id' => 'id'],
+            normalizationContext: ['groups' => ['user:read']],
+            security: "is_granted('ROLE_ADMIN') or object == user",
+        ),
+        new Post(
+            uriTemplate: '/user',
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:create']],
+        ),
+        new Patch(
+            uriTemplate: '/user/{id}',
+            uriVariables: ['id' => 'id'],
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:update']],
+            security: "is_granted('ROLE_ADMIN') or object == user",
+        ),
+        new Delete(
+            uriTemplate: '/user/{id}',
+            uriVariables: ['id' => 'id'],
+            security: "is_granted('ROLE_ADMIN') or object == user",
+        ),
+    ],
+    processor: UserProcessor::class,
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,8 +65,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     #[Assert\Regex('/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/', message: 'Email Invalide')]
+    #[Assert\NotBlank]
+    #[Groups(['user:create', 'user:update', 'user:read:self'])]
     private ?string $email = null;
 
     /**
@@ -34,15 +81,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user:create'])]
     private ?string $password = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?float $balance = null;
 
     #[ORM\Column(length: 20)]
-    private ?string $tier = null;
+    #[Groups(['user:read'])]
+    private ?UserTier $tier = UserTier::BASIC;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:create', 'user:update', 'user:read'])]
     private ?string $pseudo = null;
 
     #[ORM\Column]
@@ -52,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, InventoryItem>
      */
     #[ORM\OneToMany(targetEntity: InventoryItem::class, mappedBy: 'owner')]
+    #[Groups(['user:read:self'])]
     private Collection $inventoryItems;
 
     public function __construct()
@@ -81,6 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    #[Ignore]
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
@@ -152,12 +205,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTier(): ?string
+    public function getTier(): ?UserTier
     {
         return $this->tier;
     }
 
-    public function setTier(string $tier): static
+    public function setTier(UserTier $tier): static
     {
         $this->tier = $tier;
 
