@@ -1,0 +1,21 @@
+meta {
+  name: User Patch
+  type: http
+  seq: 2
+}
+
+patch {
+  url: https://symfo-gobelins.test/api/user/3
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/merge-patch+json
+}
+
+body:json {
+  {
+    "pseudo": "LonejycV3"
+  }
+}

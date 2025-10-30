@@ -1,0 +1,19 @@
+meta {
+  name: Get User
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://symfo-gobelins.test/api/user/1
+  body: json
+  auth: bearer
+}
+
+headers {
+  content-type: application/ld+json
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3NjE4MzQ3MjksImV4cCI6MTc2MTgzODMyOSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiam9jZWx5bi5tYXJjaWxsb3V4QGdtYWlsLmNvbSJ9.oC0ZYeNTRivJGBoiyoz8UOOlfiH1JBAgeI6aBhfsqTSOlSGIferpgVDgIDM8N4VhJEg29BSQkXVKR3NFVwkx6p57wFtlz71eIMlmPsCSbhXM0Wb3Y8SBobmwMDQXM-vT0PvjKhHRLqRZBI_Rawv2pPu_gpekW2wvzEod_V5sjha3Ixw_QmFFNcp0fIVLbunC0eRZLQ9nlYrcQ1vqEKHxRRNfmIYdvLHswpQAuI6JST6cdVVIhK-tUW6ydPQe3E7Z2VvdB6ZSAr9XiTnb2JkhuzwSoZhSM0dCHV_94Wg3AT68rNPd_82mZTNkCtTiB6vuzHJSWW6pwfsWIhuLZz0bGw
+}

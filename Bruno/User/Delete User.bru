@@ -1,0 +1,15 @@
+meta {
+  name: Delete User
+  type: http
+  seq: 6
+}
+
+delete {
+  url: https://symfo-gobelins.test/api/user/1
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/ld+json
+}
