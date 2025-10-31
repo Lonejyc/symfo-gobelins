@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Enum\UserTier;
 use App\Repository\KaseRepository;
+use App\State\KaseOpenerProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,8 +49,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Post(
             uriTemplate: '/case/{id}/open',
             uriVariables: ['id' => 'id'],
-            security: "is_granted('ROLE_USER')"
-            // custom processor
+            normalizationContext: ['groups' => ['inventory:read']],
+            security: "is_granted('ROLE_USER')",
+            processor: KaseOpenerProcessor::class
         ),
     ],
 )]

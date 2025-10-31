@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(
             uriTemplate: '/user/{id}',
             uriVariables: ['id' => 'id'],
-            normalizationContext: ['groups' => ['user:read']],
+            normalizationContext: ['groups' => ['user:read', 'user:read:self', 'inventory:read']],
             security: "is_granted('ROLE_ADMIN') or object == user",
         ),
         new Post(
@@ -103,7 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, InventoryItem>
      */
     #[ORM\OneToMany(targetEntity: InventoryItem::class, mappedBy: 'owner')]
-    #[Groups(['user:read:self'])]
+    #[Groups(['inventory:read'])]
     private Collection $inventoryItems;
 
     public function __construct()

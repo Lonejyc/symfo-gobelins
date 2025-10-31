@@ -9,8 +9,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\InventoryItemRepository;
+use App\State\InventorySellAllProcessor;
+use App\State\InventorySellProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: InventoryItemRepository::class)]
 #[ApiResource(
@@ -43,11 +46,15 @@ use Symfony\Component\Serializer\Attribute\Groups;
         ),
         new Post(
             uriTemplate: '/inventory_item/{id}/sell',
+            normalizationContext: ['groups' => ['user:read:public', 'user:read:self']],
             security: "object.getOwner() == user",
-            read: false,
-            write: false,
-            name: 'sell_item',
-//            processor: App\State\InventorySellProcessor::class
+            processor: InventorySellProcessor::class
+        ),
+        new Post(
+            uriTemplate: '/inventory_item/sell',
+            normalizationContext: ['groups' => ['user:read:public', 'user:read:self']],
+            security: "is_granted('ROLE_USER')",
+            processor: InventorySellAllProcessor::class
         ),
     ],
     normalizationContext: ['groups' => ['inventory:read']]
@@ -61,6 +68,8 @@ class InventoryItem
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThan('0.000001')]
+    #[Assert\LessThan('0.999999')]
     #[Groups(['inventory:read', 'inventory:write:admin', 'inventory:update:admin'])]
     private ?float $float = null;
 

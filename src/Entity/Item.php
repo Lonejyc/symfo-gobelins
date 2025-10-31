@@ -54,16 +54,16 @@ class Item
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: ['item:write'])]
-    #[Groups(['item:read', 'item:write', 'item:update', 'case:read'])]
+    #[Groups(['item:read', 'item:write', 'item:update', 'case:read', 'inventory:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(groups: ['item:write'])]
-    #[Groups(['item:read', 'item:write', 'case:read'])]
+    #[Groups(['item:read', 'item:write', 'case:read', 'inventory:read'])]
     private ?string $rarity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['item:read', 'item:write', 'item:update', 'case:read'])]
+    #[Groups(['item:read', 'item:write', 'item:update', 'case:read', 'inventory:read'])]
     private ?string $imageUrl = null;
 
     #[ORM\Column]
