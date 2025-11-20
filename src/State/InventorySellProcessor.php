@@ -2,18 +2,23 @@
 
 namespace App\State;
 
+use ApiPlatform\Doctrine\Common\State\PersistProcessor;
+use ApiPlatform\Doctrine\Common\State\RemoveProcessor;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\InventoryItem;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use ApiPlatform\Metadata\Operation;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class InventorySellProcessor implements ProcessorInterface
 {
 
     public function __construct(
+        #[Autowire(service: PersistProcessor::class)] private ProcessorInterface $persistProcessor,
+        #[Autowire(service: RemoveProcessor::class)] private ProcessorInterface $removeProcessor,
         private Security $security,
         private EntityManagerInterface $em,
     )
@@ -27,7 +32,8 @@ class InventorySellProcessor implements ProcessorInterface
         /** @var User|null $user */
         $user = $this->security->getUser();
 
-        if (!$user || $itemToSell->getOwner() !== $user) {
+        // remplacer par un voter
+        if (!$user) {
             throw new AccessDeniedException('Vous ne pouvez pas vendre cet item.');
         }
 

@@ -21,6 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(
+            uriTemplate: '/cases',
             normalizationContext: ['groups' => ['case:read']]
         ),
         new Get(
