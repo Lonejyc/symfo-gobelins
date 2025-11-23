@@ -67,12 +67,21 @@ Voici les grandes étapes.s
 
 
 
-## 🚀 Démarrage du Projet
+# 🚀 Démarrage du Projet
 
+1. Démarrer les conteneurs Docker :
+```bash
 docker compose up --wait
+```
+2. Ouvrir le shell php : 
+```bash
 docker compose exec php bash
-# Dans le conteneur PHP
-php bin/console doctrine:fixtures:load --append
-
-lancement du projet front 
+```
+3. Load les fixtures :
+```bash
+php bin/console doctrine:fixtures:load
+```
+4. Lancer le front :
+```bash
 npm run dev
+```
