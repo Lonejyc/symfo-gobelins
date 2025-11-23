@@ -10,8 +10,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use App\Enum\UserTier;
+use App\State\UserMeProvider;
 use App\State\UserProcessor;
-use App\Controller\UserController;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,6 +31,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/users',
             normalizationContext: ['groups' => ['user:read']],
+        ),
+        new Get(
+            uriTemplate: '/user/me',
+            normalizationContext: ['groups' => ['user:read', 'user:read:self', 'inventory:read']],
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+            name: 'me',
+            provider: UserMeProvider::class,
         ),
         new Get(
             uriTemplate: '/user/{id}',
