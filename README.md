@@ -64,3 +64,15 @@ Voici les grandes étapes.s
 * **Doctrine ORM** / **PostgreSQL**
 * **LexikJWTAuthenticationBundle** (Authentification)
 * **Symfony Messenger** (Crons & Tâches de fond)
+
+
+
+## 🚀 Démarrage du Projet
+
+docker compose up --wait
+docker compose exec php bash
+# Dans le conteneur PHP
+php bin/console doctrine:fixtures:load --append
+
+lancement du projet front 
+npm run dev
