@@ -22,10 +22,9 @@ L'objectif est de créer une API qui gère l'ensemble de l'écosystème "Hellcas
 * **Sécurité Granulaire (Voters) :** Utiliser les **Voters Symfony** pour gérer des règles d'autorisation. Cela inclut :
     * La propriété des ressources (un utilisateur ne peut voir que son propre inventaire).
     * **La gestion des offres** : Restreindre l'accès à certaines caisses ou fonctionnalités en fonction du "tier" de l'utilisateur (ex: `basique`, `premium`, `diamant`).
-* **Tâches Planifiées (Crons) :** Utiliser **Symfony Messenger** pour gérer les tâches asynchrones et planifiées, notamment :
+* **Tâches Planifiées (Crons) Optionnel :** Utiliser **Symfony Messenger** pour gérer les tâches asynchrones et planifiées, notamment :
     * L'envoi d'emails transactionnels (confirmation d'achat, etc.).
     * La génération de rapports de **statistiques** (ex: revenus quotidiens).
-    * Le **nettoyage de la base de données** (ex: suppression des logs anciens).
 
 ---
 
@@ -47,13 +46,11 @@ Voici les grandes étapes.s
 
 ### 📈 Phase 3 : Crons
 * **Tâches Cron (Messenger) :**
-    * Mise en place du **cron** pour synchroniser les prix des items (ex: toutes les heures).
-    * Mise en place des **crons** de stats et de cleanup BDD.
+    * Mise en place des **crons** de stats.
 
 ### 🌌 Phase 4 : Partie Bonus
 * **Vente d'Items :** Opération `POST /api/inventory_item/{id}/sell` (revente contre solde).
 * **Trade-up :** Opération `POST /api/trade-up` (échanger 10 items contre 1 de rareté supérieure).
-* **Case Battles :** Développement du mode de jeu Joueur vs Joueur.
 
 ---
 
