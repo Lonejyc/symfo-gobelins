@@ -113,9 +113,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['inventory:read'])]
     private Collection $inventoryItems;
 
+    /**
+     * @var Collection<int, UserSubscription>
+     */
+    #[ORM\OneToMany(targetEntity: UserSubscription::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read:self'])]
+    private Collection $userSubscriptions;
+
     public function __construct()
     {
         $this->inventoryItems = new ArrayCollection();
+        $this->userSubscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -276,5 +284,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, UserSubscription>
+     */
+    public function getUserSubscriptions(): Collection
+    {
+        return $this->userSubscriptions;
+    }
+
+    public function setUserSubscriptions(Collection $userSubscriptions): static
+    {
+        $this->userSubscriptions = $userSubscriptions;
+
+        return $this;
+    }
+
+    public function getActiveSubscription(): ?UserSubscription
+    {
+        foreach ($this->userSubscriptions as $sub) {
+            if ($sub->isActive()) {
+                return $sub;
+            }
+        }
+        return null;
     }
 }

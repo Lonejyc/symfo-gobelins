@@ -14,12 +14,13 @@ class KaseItemFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $data = [
+            [1, 1, 1, 0.507],
             [2, 1, 16, 0.001],
             [3, 1, 15, 0.002],
+            [4, 1, 9, 0.04],
             [5, 1, 3, 0.25],
-            [4, 1, 1, 0.507],
-            [7, 1, 4, 0.2],
-            [1, 1, 9, 0.04],
+            [6, 1, 4, 0.2],
+            [7, 1, 15, 0.0026],
             [8, 3, 5, 0.7992],
             [9, 3, 6, 0.0532],
             [10, 3, 7, 0.0533],
@@ -30,6 +31,14 @@ class KaseItemFixtures extends Fixture implements DependentFixtureInterface
             [15, 3, 14, 0.0032],
             [16, 3, 13, 0.0032],
             [17, 3, 15, 0.0026],
+            [18, 2, 5, 0.55],
+            [19, 2, 7, 0.25],
+            [20, 2, 6, 0.10],
+            [21, 2, 11, 0.05],
+            [22, 2, 9, 0.03],
+            [23, 2, 14, 0.01],
+            [24, 2, 13, 0.005],
+            [25, 2, 10, 0.005],
         ];
 
         foreach ($data as [$id, $kaseId, $itemId, $dropRate]) {
@@ -51,13 +60,11 @@ class KaseItemFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    // Cette méthode dit à Symfony : "Lance KaseFixtures AVANT moi"
     public function getDependencies(): array
     {
         return [
             KaseFixtures::class,
-            // Si tu as une classe ItemFixtures, ajoute-la ici aussi :
-            // ItemFixtures::class,
+            ItemFixtures::class,
         ];
     }
 }
