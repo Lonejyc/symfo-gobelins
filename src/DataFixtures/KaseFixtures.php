@@ -9,15 +9,14 @@ use Doctrine\Persistence\ObjectManager;
 
 class KaseFixtures extends Fixture
 {
-    // On définit une constante pour partager les références
     public const KASE_REFERENCE = 'kase_';
 
     public function load(ObjectManager $manager): void
     {
         $data = [
-            [1, 'Red Case', 1.6, 'https://test.com', 'basic'],
-            [2, 'Blue Case', 3.1, 'https://test.com', 'gold'],
-            [3, 'Fade Kase', 8.0, 'https://placehold.co/256x192/8847ff/FFF?text=Caisse+du+Fade', 'basic'],
+            [1, 'Red Case', 1.6, '/images/case_red.png', 'basic'],
+            [2, 'Blue Case', 3.1, '/images/case_blue.png', 'gold'],
+            [3, 'Fade Case', 8.0, '/images/case_fade.png', 'basic'],
         ];
 
         foreach ($data as [$id, $name, $price, $image, $tierStr]) {
