@@ -29,7 +29,7 @@ class UserProcessor implements ProcessorInterface
         if ($operation instanceof Post) {
 
             $data->setRoles(['ROLE_USER']);
-            $data->setBalance(50.0);
+            $data->setBalance(500.0);
             $data->setCreatedAt(new \DateTimeImmutable());
 
             if (empty($data->getPassword())) {

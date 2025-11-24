@@ -8,7 +8,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Dto\ContractRequest;
 use App\Repository\InventoryItemRepository;
+use App\State\ContractProcessor;
 use App\State\InventorySellAllProcessor;
 use App\State\InventorySellProcessor;
 use Doctrine\ORM\Mapping as ORM;
@@ -55,6 +57,14 @@ use Symfony\Component\Validator\Constraints as Assert;
             normalizationContext: ['groups' => ['user:read:public', 'user:read:self']],
             security: "is_granted('ROLE_USER')",
             processor: InventorySellAllProcessor::class
+        ),
+        new Post(
+            uriTemplate: '/inventory/contract',
+            normalizationContext: ['groups' => ['inventory:read']],
+            security: "is_granted('ROLE_USER')",
+            input: ContractRequest::class,
+            name: 'contract_items',
+            processor: ContractProcessor::class
         ),
     ],
     normalizationContext: ['groups' => ['inventory:read']]
